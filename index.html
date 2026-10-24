@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tech & Home - Electronics & Kitchen Gadgets</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts (Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              accent: '#06b6d4', // Cyan
+              accentHover: '#0891b2',
+              orange: '#f97316', // Vibrant Orange highlight
+              orangeHover: '#ea580c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Mobile Styling & Touch Optimization */
+    body {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .pb-safe {
+      padding-bottom: calc(4.2rem + env(safe-area-inset-bottom));
+    }
+    .glass-effect {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-900 text-slate-100 font-sans pb-safe min-h-screen antialiased">
+
+  <!-- TOP STICKY HEADER -->
+  <header class="sticky top-0 z-40 glass-effect border-b border-slate-800 px-3 py-2.5 shadow-md">
+    <div class="max-w-7xl mx-auto">
+      <!-- Top Row: Brand & Quick Actions -->
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-orange-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+            <i class="fa-solid font-bold fa-bolt text-slate-950 text-xl"></i>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-lg tracking-tight leading-none text-white">TECH & HOME</h1>
+            <span class="text-[10px] text-cyan-400 font-semibold tracking-wider uppercase">Wings Gadgets</span>
+          </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-xs">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input 
+            type="text" 
+            id="searchInput"
+            onkeyup="handleSearch()"
+            placeholder="Search gadgets, specs..." 
+            class="w-full bg-slate-800/90 text-xs text-white pl-8 pr-3 py-2 rounded-full border border-slate-700/60 focus:outline-none focus:border-cyan-500 placeholder-slate-400 transition"
+          >
+        </div>
+
+        <!-- Top Right Quick Cart Icon -->
+        <button onclick="toggleCartDrawer(true)" class="relative p-2 bg-slate-800 text-slate-200 rounded-full hover:bg-slate-700 active:scale-95 transition">
+          <i class="fa-solid fa-cart-shopping text-base"></i>
+          <span id="headerCartBadge" class="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md scale-0 transition-transform duration-300">0</span>
+        </button>
+      </div>
+
+      <!-- Scrollable Category Pills -->
+      <div class="flex items-center gap-2 mt-2 overflow-x-auto hide-scrollbar py-1">
+        <button onclick="filterCategory('All')" id="cat-All" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-cyan-500 text-slate-950 shadow-md">
+          <i class="fa-solid fa-grip-all mr-1"></i> All Gadgets
+        </button>
+        <button onclick="filterCategory('Electronic')" id="cat-Electronic" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600">
+          <i class="fa-solid fa-microchip mr-1 text-cyan-400"></i> Electronics
+        </button>
+        <button onclick="filterCategory('Kitchen')" id="cat-Kitchen" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600">
+          <i class="fa-solid fa-utensils mr-1 text-orange-400"></i> Kitchen Tech
+        </button>
+        <button onclick="toggleCompareModal(true)" class="px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-slate-800 text-cyan-400 border border-cyan-500/40">
+          <i class="fa-solid fa-code-compare mr-1"></i> Compare (<span id="compareCount">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-3 pt-3">
+
+    <!-- HERO PROMO BANNER -->
+    <section class="relative rounded-2xl overflow-hidden mb-4 bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950 border border-slate-800 p-4 shadow-xl">
+      <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="relative z-10">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] font-bold tracking-wide uppercase mb-2">
+          <i class="fa-solid fa-fire text-xs"></i> Super Tech Deals
+        </div>
+        <h2 class="text-xl font-black text-white leading-tight">Smart Living & Kitchen Innovations</h2>
+        <p class="text-xs text-slate-300 mt-1 max-w-xs">Up to 45% OFF on GaN Chargers, Air Fryers & Portable Blenders!</p>
+        <div class="mt-3 flex items-center gap-2">
+          <button onclick="scrollToProducts()" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs active:scale-95 transition shadow-lg shadow-cyan-500/25">
+            Shop Top Deals <i class="fa-solid fa-arrow-right ml-1"></i>
+          </button>
+          <span class="text-[11px] text-slate-400 font-medium"><i class="fa-solid fa-shield-halved text-cyan-400"></i> 1 Year Warranty</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS SECTION -->
+    <section id="productsSection">
+      <!-- Filters & Sorting Header -->
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+            <span id="activeCategoryTitle">All Products</span>
+            <span id="productCountBadge" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700">8 items</span>
+          </h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="sortSelect" onchange="applyFiltersAndSort()" class="bg-slate-800 text-xs text-slate-300 border border-slate-700 rounded-lg px-2 py-1.5 focus:outline-none">
+            <option value="featured">Featured</option>
+            <option value="lowHigh">Price: Low to High</option>
+            <option value="highLow">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Product Grid (2 columns on mobile, 4 on desktop) -->
+      <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+        <!-- Dynamic Insertion by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM FIXED NAVIGATION BAR (NATIVE APP STYLE) -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 glass-effect border-t border-slate-800 py-1.5 px-4">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <button onclick="scrollToProducts()" class="flex flex-col items-center gap-0.5 text-cyan-400">
+        <i class="fa-solid fa-store text-lg"></i>
+        <span class="text-[10px] font-medium">Shop</span>
+      </button>
+      <button onclick="toggleCompareModal(true)" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-cyan-400 transition relative">
+        <i class="fa-solid fa-code-compare text-lg"></i>
+        <span class="text-[10px] font-medium">Compare</span>
+        <span id="navCompareBadge" class="absolute -top-1 right-1 bg-cyan-500 text-slate-950 font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+      </button>
+      <button onclick="toggleCartDrawer(true)" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-cyan-400 transition relative">
+        <i class="fa-solid fa-cart-shopping text-lg"></i>
+        <span class="text-[10px] font-medium">Cart</span>
+        <span id="navCartBadge" class="absolute -top-1 right-1 bg-orange-500 text-white font-bold text-[9px] w-4 h-4 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+      </button>
+      <button onclick="showOrdersModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-cyan-400 transition">
+        <i class="fa-solid fa-box-open text-lg"></i>
+        <span class="text-[10px] font-medium">Orders</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div id="productDetailModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto hide-scrollbar p-4 relative shadow-2xl">
+      <button onclick="closeProductModal()" class="absolute top-3 right-3 bg-slate-800 text-slate-400 w-8 h-8 rounded-full flex items-center justify-center hover:text-white">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="productModalContent">
+        <!-- Dynamic Content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON MODAL -->
+  <div id="compareModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-sm hidden p-3">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+      <div class="p-3 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+          <i class="fa-solid fa-code-compare text-cyan-400"></i> Side-by-Side Gadget Compare
+        </h3>
+        <button onclick="toggleCompareModal(false)" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-3 overflow-y-auto hide-scrollbar flex-1" id="compareModalBody">
+        <!-- Dynamic Comparison Content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE-OVER CART DRAWER -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-sm hidden transition-all">
+    <div class="bg-slate-900 w-full max-w-md h-full flex flex-col border-l border-slate-800 shadow-2xl">
+      <!-- Cart Header -->
+      <div class="p-3.5 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-bag-shopping text-cyan-400 text-lg"></i>
+          <h3 class="font-bold text-white text-base">Your Cart</h3>
+          <span id="cartDrawerCount" class="text-xs text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">0 items</span>
+        </div>
+        <button onclick="toggleCartDrawer(false)" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Pincode Check Banner -->
+      <div class="bg-slate-800/80 px-3.5 py-2 border-b border-slate-800 flex items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-1.5 text-slate-300">
+          <i class="fa-solid fa-location-dot text-orange-400"></i>
+          <span>Delivery Pincode:</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <input type="text" id="pincodeInput" maxlength="6" placeholder="e.g. 625001" class="w-20 bg-slate-900 border border-slate-700 px-2 py-0.5 rounded text-[11px] text-white focus:outline-none">
+          <button onclick="checkPincode()" class="bg-cyan-500 text-slate-950 text-[10px] font-bold px-2 py-1 rounded">Check</button>
+        </div>
+      </div>
+      <div id="pincodeMsg" class="px-3.5 text-[11px] py-1 hidden"></div>
+
+      <!-- Cart Items Scroll -->
+      <div id="cartItemsList" class="flex-1 overflow-y-auto p-3.5 space-y-3 hide-scrollbar">
+        <!-- Dynamic Cart Items -->
+      </div>
+
+      <!-- Cart Summary Footer -->
+      <div class="p-3.5 border-t border-slate-800 bg-slate-950/60 space-y-2">
+        <!-- Promo Code -->
+        <div class="flex gap-2">
+          <input type="text" id="promoInput" placeholder="Promo code (e.g. WINGS10)" class="flex-1 bg-slate-900 border border-slate-800 text-xs px-2.5 py-1.5 rounded-lg text-white focus:outline-none uppercase">
+          <button onclick="applyPromo()" class="bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg font-medium">Apply</button>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="space-y-1 text-xs text-slate-400 pt-1">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span id="cartSubtotal" class="text-slate-200">₹0</span>
+          </div>
+          <div class="flex justify-between">
+            <span>GST (18%)</span>
+            <span id="cartTax" class="text-slate-200">₹0</span>
+          </div>
+          <div class="flex justify-between text-emerald-400">
+            <span>Delivery Fee</span>
+            <span id="cartDelivery">FREE</span>
+          </div>
+          <div id="discountRow" class="flex justify-between text-orange-400 hidden">
+            <span>Promo Discount</span>
+            <span id="cartDiscount">-₹0</span>
+          </div>
+          <div class="flex justify-between text-sm font-bold text-white pt-2 border-t border-slate-800">
+            <span>Grand Total</span>
+            <span id="cartGrandTotal" class="text-cyan-400">₹0</span>
+          </div>
+        </div>
+
+        <button onclick="openCheckout()" id="checkoutBtn" disabled class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider disabled:opacity-50 shadow-lg shadow-orange-500/20 active:scale-95 transition">
+          Proceed to Checkout <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT STEP MODAL -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-md hidden p-3">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl">
+      <div class="p-3.5 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-white text-sm flex items-center gap-2">
+          <i class="fa-solid fa-credit-card text-cyan-400"></i> Checkout Details
+        </h3>
+        <button onclick="closeCheckout()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-4 space-y-4 max-h-[80vh] overflow-y-auto hide-scrollbar">
+        <!-- Step 1: Address -->
+        <div>
+          <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">1. Delivery Address</h4>
+          <div class="space-y-2">
+            <input type="text" id="custName" placeholder="Full Name" class="w-full bg-slate-800 border border-slate-700 text-xs text-white p-2.5 rounded-lg focus:outline-none focus:border-cyan-500">
+            <input type="tel" id="custPhone" placeholder="Mobile Number (e.g. 9876543210)" class="w-full bg-slate-800 border border-slate-700 text-xs text-white p-2.5 rounded-lg focus:outline-none focus:border-cyan-500">
+            <textarea id="custAddr" rows="2" placeholder="Full Street Address & Pincode" class="w-full bg-slate-800 border border-slate-700 text-xs text-white p-2.5 rounded-lg focus:outline-none focus:border-cyan-500"></textarea>
+          </div>
+        </div>
+
+        <!-- Step 2: Payment -->
+        <div>
+          <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">2. Payment Method</h4>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="border border-slate-700 bg-slate-800 p-2.5 rounded-xl flex flex-col items-center gap-1 cursor-pointer text-center hover:border-cyan-500 transition">
+              <input type="radio" name="payMethod" value="UPI" checked class="hidden peer">
+              <i class="fa-solid fa-mobile-screen-button text-cyan-400 text-lg"></i>
+              <span class="text-[10px] font-semibold text-slate-200">UPI / GPay</span>
+            </label>
+            <label class="border border-slate-700 bg-slate-800 p-2.5 rounded-xl flex flex-col items-center gap-1 cursor-pointer text-center hover:border-cyan-500 transition">
+              <input type="radio" name="payMethod" value="COD" class="hidden peer">
+              <i class="fa-solid fa-hand-holding-dollar text-orange-400 text-lg"></i>
+              <span class="text-[10px] font-semibold text-slate-200">Cash on Delivery</span>
+            </label>
+            <label class="border border-slate-700 bg-slate-800 p-2.5 rounded-xl flex flex-col items-center gap-1 cursor-pointer text-center hover:border-cyan-500 transition">
+              <input type="radio" name="payMethod" value="CARD" class="hidden peer">
+              <i class="fa-regular fa-credit-card text-emerald-400 text-lg"></i>
+              <span class="text-[10px] font-semibold text-slate-200">Card / NetBank</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Total Pay Summary -->
+        <div class="bg-slate-800/60 p-3 rounded-xl flex items-center justify-between text-xs">
+          <span class="text-slate-400">Total Payable Amount:</span>
+          <span id="checkoutTotalAmount" class="text-base font-bold text-cyan-400">₹0</span>
+        </div>
+
+        <button onclick="placeOrder()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20 active:scale-95 transition">
+          Confirm Order <i class="fa-solid fa-circle-check ml-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER SUCCESS CONFIRMATION MODAL -->
+  <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-md hidden p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-6 text-center shadow-2xl relative">
+      <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-3 border border-emerald-500/30 text-2xl animate-bounce">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3 class="text-lg font-bold text-white">Order Placed Successfully!</h3>
+      <p class="text-xs text-slate-400 mt-1">Thank you for shopping with Wings Gadgets.</p>
+      
+      <div class="bg-slate-800/80 p-3 rounded-xl my-4 text-left text-xs space-y-1 border border-slate-700">
+        <div class="flex justify-between">
+          <span class="text-slate-400">Order ID:</span>
+          <span id="successOrderId" class="font-mono text-cyan-400 font-bold">#WG-00000</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Estimated Delivery:</span>
+          <span class="text-slate-200 font-medium">3-4 Business Days</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Status:</span>
+          <span class="text-emerald-400 font-medium"><i class="fa-solid fa-circle-notch fa-spin text-[10px] mr-1"></i> Processing</span>
+        </div>
+      </div>
+
+      <button onclick="closeSuccessModal()" class="w-full bg-cyan-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <!-- ORDERS HISTORY MODAL -->
+  <div id="ordersModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-sm hidden p-3">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl max-h-[80vh] flex flex-col shadow-2xl">
+      <div class="p-3.5 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-bold text-white text-sm flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i> My Orders
+        </h3>
+        <button onclick="closeOrdersModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="ordersList" class="p-4 overflow-y-auto space-y-3 flex-1 hide-scrollbar">
+        <!-- Dynamic Orders -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-cyan-500 text-slate-950 text-xs font-bold px-4 py-2 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
+    <i class="fa-solid fa-circle-info"></i> <span id="toastMsg">Notification</span>
+  </div>
+
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // ----------------------------------------------------
+    // SAMPLE GADGETS DATA STORE
+    // ----------------------------------------------------
+    const products = [
+      {
+        id: 'p1',
+        name: 'GaN Fast Charger 65W Multi-Port',
+        category: 'Electronic',
+        price: 1899,
+        originalPrice: 2999,
+        rating: 4.8,
+        reviewsCount: 142,
+        badge: 'Best Seller',
+        warranty: '1 Year Warranty',
+        techSpecPill: '65W GaN | Dual Type-C',
+        icon: 'fa-charging-station',
+        accentColor: 'from-cyan-500/20 to-blue-500/20 text-cyan-400',
+        specs: [
+          '65W Gallium Nitride (GaN) Ultra Fast Charging',
+          '2x USB-C Power Delivery + 1x USB-A QuickCharge',
+          'Compatible with Laptops, iPhones, Androids',
+          'Built-in Intelligent Over-voltage & Temperature Protection'
+        ],
+        description: 'Compact high-speed charger designed for modern travelers and tech professionals. Charges laptops and phones simultaneously without heating.'
+      },
+      {
+        id: 'p2',
+        name: 'Digital Air Fryer 4.5L Touch Display',
+        category: 'Kitchen',
+        price: 4299,
+        originalPrice: 6999,
+        rating: 4.9,
+        reviewsCount: 230,
+        badge: 'Top Kitchen Pick',
+        warranty: '2 Years Warranty',
+        techSpecPill: '1400W | 8 Presets',
+        icon: 'fa-temperature-arrow-up',
+        accentColor: 'from-orange-500/20 to-amber-500/20 text-orange-400',
+        specs: [
+          '1400W Rapid 360° Air Circulation Technology',
+          '8 Preset Cooking Functions with One-Touch LED Panel',
+          'Non-Stick Dishwasher Safe Food Basket',
+          'Reduces Oil Consumption up to 85%'
+        ],
+        description: 'Enjoy crispy, healthy fried food with minimal oil. Features touch control panel and auto shut-off safety sensor.'
+      },
+      {
+        id: 'p3',
+        name: '20000mAh Magnetic Wireless Power Bank',
+        category: 'Electronic',
+        price: 2199,
+        originalPrice: 3499,
+        rating: 4.7,
+        reviewsCount: 98,
+        badge: 'New Release',
+        warranty: '1 Year Warranty',
+        techSpecPill: '20000mAh | 22.5W',
+        icon: 'fa-battery-full',
+        accentColor: 'from-cyan-500/20 to-blue-500/20 text-cyan-400',
+        specs: [
+          '20,000mAh High-Density Li-Polymer Cell',
+          '15W MagSafe Wireless Charging + 22.5W Wired Output',
+          'Digital LED Battery Percentage Indicator',
+          'Pass-Through Charging Supported'
+        ],
+        description: 'Slim, heavy-duty power bank with strong magnetic lock for iPhones and Android devices. Never run out of charge.'
+      },
+      {
+        id: 'p4',
+        name: 'Portable Rechargeable Personal Blender',
+        category: 'Kitchen',
+        price: 1299,
+        originalPrice: 1999,
+        rating: 4.6,
+        reviewsCount: 185,
+        badge: 'Must Have',
+        warranty: '1 Year Warranty',
+        techSpecPill: '6 Blades | Type-C',
+        icon: 'fa-blender',
+        accentColor: 'from-orange-500/20 to-amber-500/20 text-orange-400',
+        specs: [
+          '6 3D Stainless Steel Serrated Blades',
+          '4000mAh USB-C Rechargeable Battery (15+ Blends)',
+          'BPA-Free 450ml Portable Juicer Bottle',
+          'Magnetic Safety Sensor Lock'
+        ],
+        description: 'Blend fresh smoothies, protein shakes, and baby food anywhere on the go. Super easy to rinse and clean.'
+      },
+      {
+        id: 'p5',
+        name: 'ANC Wireless Earbuds Pro 3',
+        category: 'Electronic',
+        price: 2499,
+        originalPrice: 4999,
+        rating: 4.8,
+        reviewsCount: 310,
+        badge: 'Hot Seller',
+        warranty: '1 Year Warranty',
+        techSpecPill: '32dB ANC | 36H Play',
+        icon: 'fa-headphones',
+        accentColor: 'from-cyan-500/20 to-blue-500/20 text-cyan-400',
+        specs: [
+          'Active Noise Cancellation up to 32dB',
+          '13mm Dynamic Titanium Bass Drivers',
+          '36 Hours Total Battery Life with Fast Charge Case',
+          'Quad-Mic ENC for Crystal Clear Calls'
+        ],
+        description: 'Premium wireless sound experience with deep punchy bass, low latency gaming mode, and splash resistance.'
+      },
+      {
+        id: 'p6',
+        name: 'Electric Smart Kettle with Temp Control',
+        category: 'Kitchen',
+        price: 1999,
+        originalPrice: 2999,
+        rating: 4.7,
+        reviewsCount: 76,
+        badge: 'Smart Living',
+        warranty: '1 Year Warranty',
+        techSpecPill: '1800W | 1.7L SS304',
+        icon: 'fa-mug-hot',
+        accentColor: 'from-orange-500/20 to-amber-500/20 text-orange-400',
+        specs: [
+          '1800W Rapid Boil (Water Boils in 4 Mins)',
+          'Food Grade SS304 Stainless Steel Interior',
+          'Digital LED Temperature Monitor with Keep Warm Feature',
+          'Auto Shut-Off & Dry Boil Safe Cut-off'
+        ],
+        description: 'Brew tea and coffee at precise temperatures. Double-wall insulated body prevents outer burns.'
+      },
+      {
+        id: 'p7',
+        name: 'Smart 2K WiFi Outdoor Security Camera',
+        category: 'Electronic',
+        price: 2799,
+        originalPrice: 3999,
+        rating: 4.8,
+        reviewsCount: 112,
+        badge: 'Security Pick',
+        warranty: '1 Year Warranty',
+        techSpecPill: '2K HD | Color Night',
+        icon: 'fa-video',
+        accentColor: 'from-cyan-500/20 to-blue-500/20 text-cyan-400',
+        specs: [
+          '2K Ultra HD Resolution with Full Color Night Vision',
+          'AI Motion Detection & Instant Mobile Notifications',
+          '2-Way Audio Talk Back System',
+          'IP66 Weatherproof Body & SD Card / Cloud Storage'
+        ],
+        description: 'Keep your home safe from anywhere. Monitor real-time video streaming on your smartphone with night vision.'
+      },
+      {
+        id: 'p8',
+        name: 'Multi-Function Electric Food Chopper',
+        category: 'Kitchen',
+        price: 1499,
+        originalPrice: 2499,
+        rating: 4.5,
+        reviewsCount: 164,
+        badge: 'Kitchen Essential',
+        warranty: '1 Year Warranty',
+        techSpecPill: '500W | 2L Glass Bowl',
+        icon: 'fa-cut',
+        accentColor: 'from-orange-500/20 to-amber-500/20 text-orange-400',
+        specs: [
+          '500W Pure Copper Motor with 2 Speed Pulses',
+          '4 Bi-Level Stainless Steel Sharp Blades',
+          '2 Liter Heavy Duty Tempered Glass Bowl',
+          'Chops Vegetables, Meat, Nuts in 8 Seconds'
+        ],
+        description: 'Save cooking prep time drastically. Effortlessly chop onions, garlic, meat, and vegetables with a single press.'
+      }
+    ];
+
+    // STATE VARIABLES
+    let cart = [];
+    let compareList = [];
+    let placedOrders = [];
+    let activeCategory = 'All';
+    let promoApplied = false;
+    let promoDiscountPct = 0;
+
+    // INITIALIZATION
+    window.onload = function() {
+      renderProducts();
+      updateCartUI();
+      updateCompareUI();
+    };
+
+    // ----------------------------------------------------
+    // RENDER PRODUCTS GRID
+    // ----------------------------------------------------
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      let filtered = [...products];
+
+      // Filter by category
+      if (activeCategory !== 'All') {
+        filtered = filtered.filter(p => p.category === activeCategory);
+      }
+
+      // Search term
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (searchVal) {
+        filtered = filtered.filter(p => 
+          p.name.toLowerCase().includes(searchVal) || 
+          p.techSpecPill.toLowerCase().includes(searchVal) ||
+          p.category.toLowerCase().includes(searchVal)
+        );
+      }
+
+      // Sorting
+      const sortVal = document.getElementById('sortSelect').value;
+      if (sortVal === 'lowHigh') filtered.sort((a,b) => a.price - b.price);
+      if (sortVal === 'highLow') filtered.sort((a,b) => b.price - a.price);
+      if (sortVal === 'rating') filtered.sort((a,b) => b.rating - a.rating);
+
+      document.getElementById('productCountBadge').textContent = `${filtered.length} items`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500">
+            <i class="fa-solid fa-magnifying-glass text-3xl mb-2 text-slate-600"></i>
+            <p class="text-sm">No gadgets match your search!</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const isCompared = compareList.includes(p.id);
+        return `
+          <div class="bg-slate-800/80 border border-slate-700/70 rounded-2xl p-2.5 flex flex-col justify-between relative shadow-lg hover:border-slate-600 transition group">
+            
+            <!-- Badge & Category -->
+            <div class="flex items-center justify-between gap-1 mb-1.5">
+              <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-slate-300">
+                ${p.badge}
+              </span>
+              <button onclick="toggleCompareItem('${p.id}')" class="text-[11px] p-1 ${isCompared ? 'text-cyan-400' : 'text-slate-500 hover:text-slate-300'}">
+                <i class="fa-solid fa-code-compare"></i>
+              </button>
+            </div>
+
+            <!-- Icon Visual Box -->
+            <div onclick="openProductModal('${p.id}')" class="cursor-pointer my-1.5 py-4 bg-gradient-to-br ${p.accentColor} rounded-xl flex items-center justify-center border border-slate-700/50 group-hover:scale-[1.02] transition-transform">
+              <i class="fa-solid ${p.icon} text-4xl shadow-sm"></i>
+            </div>
+
+            <!-- Details -->
+            <div onclick="openProductModal('${p.id}')" class="cursor-pointer space-y-1">
+              <div class="flex items-center gap-1 text-[10px] text-amber-400 font-bold">
+                <i class="fa-solid fa-star"></i>
+                <span>${p.rating}</span>
+                <span class="text-slate-500 font-normal">(${p.reviewsCount})</span>
+              </div>
+
+              <h4 class="text-xs font-bold text-white line-clamp-2 leading-snug hover:text-cyan-400 transition">
+                ${p.name}
+              </h4>
+
+              <!-- Spec Pill -->
+              <span class="inline-block text-[9px] font-medium bg-slate-900 text-cyan-300 px-2 py-0.5 rounded-full border border-slate-700">
+                <i class="fa-solid fa-microchip text-[8px] mr-0.5"></i> ${p.techSpecPill}
+              </span>
+
+              <!-- Price Row -->
+              <div class="pt-1.5 flex items-baseline gap-1.5">
+                <span class="text-sm font-black text-white">₹${p.price.toLocaleString('en-IN')}</span>
+                <span class="text-[10px] text-slate-500 line-through">₹${p.originalPrice.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <button onclick="addToCart('${p.id}')" class="mt-2.5 w-full bg-slate-700 hover:bg-cyan-500 hover:text-slate-950 text-slate-100 text-[11px] font-bold py-2 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition">
+              <i class="fa-solid fa-cart-plus"></i> Add to Cart
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // FILTER CATEGORY TOGGLE
+    function filterCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.remove('bg-cyan-500', 'text-slate-950', 'shadow-md');
+        btn.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+      });
+
+      const activeBtn = document.getElementById(`cat-${cat}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+        activeBtn.classList.add('bg-cyan-500', 'text-slate-950', 'shadow-md');
+      }
+
+      document.getElementById('activeCategoryTitle').textContent = cat === 'All' ? 'All Products' : `${cat} Gadgets`;
+      renderProducts();
+    }
+
+    function handleSearch() {
+      renderProducts();
+    }
+
+    function applyFiltersAndSort() {
+      renderProducts();
+    }
+
+    // ----------------------------------------------------
+    // CART MANAGEMENT
+    // ----------------------------------------------------
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      const existing = cart.find(item => item.id === productId);
+
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+
+      updateCartUI();
+      showToast(`Added ${product.name} to cart!`);
+    }
+
+    function updateCartQty(productId, change) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+
+      item.qty += change;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+
+      // Badges
+      const headerBadge = document.getElementById('headerCartBadge');
+      const navBadge = document.getElementById('navCartBadge');
+
+      headerBadge.textContent = totalItems;
+      navBadge.textContent = totalItems;
+
+      if (totalItems > 0) {
+        headerBadge.classList.remove('scale-0');
+        navBadge.classList.remove('scale-0');
+      } else {
+        headerBadge.classList.add('scale-0');
+        navBadge.classList.add('scale-0');
+      }
+
+      document.getElementById('cartDrawerCount').textContent = `${totalItems} items`;
+
+      // Render Cart List
+      const cartList = document.getElementById('cartItemsList');
+
+      if (cart.length === 0) {
+        cartList.innerHTML = `
+          <div class="py-16 text-center text-slate-500 space-y-2">
+            <i class="fa-solid fa-cart-flatbed text-4xl text-slate-700"></i>
+            <p class="text-xs">Your shopping cart is empty!</p>
+            <button onclick="toggleCartDrawer(false)" class="text-xs text-cyan-400 font-bold underline">Explore Gadgets</button>
+          </div>
+        `;
+        document.getElementById('checkoutBtn').disabled = true;
+      } else {
+        document.getElementById('checkoutBtn').disabled = false;
+        cartList.innerHTML = cart.map(item => `
+          <div class="bg-slate-800/60 border border-slate-700/60 p-2.5 rounded-xl flex items-center justify-between gap-2">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br ${item.accentColor} flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid ${item.icon} text-lg"></i>
+            </div>
+            
+            <div class="flex-1 min-w-0">
+              <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
+              <p class="text-[11px] text-cyan-400 font-semibold">₹${item.price.toLocaleString('en-IN')}</p>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1">
+              <button onclick="updateCartQty('${item.id}', -1)" class="text-slate-400 hover:text-white text-xs px-1">-</button>
+              <span class="text-xs font-bold text-white">${item.qty}</span>
+              <button onclick="updateCartQty('${item.id}', 1)" class="text-slate-400 hover:text-white text-xs px-1">+</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Calculations
+      const subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      const tax = Math.round(subtotal * 0.18);
+      let discount = 0;
+      if (promoApplied) {
+        discount = Math.round(subtotal * promoDiscountPct);
+      }
+      const grandTotal = subtotal + tax - discount;
+
+      document.getElementById('cartSubtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+      document.getElementById('cartTax').textContent = `₹${tax.toLocaleString('en-IN')}`;
+      document.getElementById('cartGrandTotal').textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+      document.getElementById('checkoutTotalAmount').textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+
+      if (promoApplied) {
+        document.getElementById('discountRow').classList.remove('hidden');
+        document.getElementById('cartDiscount').textContent = `-₹${discount.toLocaleString('en-IN')}`;
+      }
+    }
+
+    function applyPromo() {
+      const code = document.getElementById('promoInput').value.trim().toUpperCase();
+      if (code === 'WINGS10') {
+        promoApplied = true;
+        promoDiscountPct = 0.10; // 10% OFF
+        showToast('Promo WINGS10 applied! 10% OFF');
+        updateCartUI();
+      } else {
+        showToast('Invalid Code! Try: WINGS10');
+      }
+    }
+
+    function checkPincode() {
+      const pin = document.getElementById('pincodeInput').value.trim();
+      const msg = document.getElementById('pincodeMsg');
+      if (pin.length === 6 && !isNaN(pin)) {
+        msg.classList.remove('hidden', 'text-rose-400');
+        msg.classList.add('text-emerald-400');
+        msg.innerHTML = `<i class="fa-solid fa-truck-fast"></i> Delivery available to ${pin} in 2-3 days!`;
+      } else {
+        msg.classList.remove('hidden', 'text-emerald-400');
+        msg.classList.add('text-rose-400');
+        msg.textContent = 'Please enter a valid 6-digit Pincode.';
+      }
+    }
+
+    function toggleCartDrawer(show) {
+      const drawer = document.getElementById('cartDrawer');
+      if (show) drawer.classList.remove('hidden');
+      else drawer.classList.add('hidden');
+    }
+
+    // ----------------------------------------------------
+    // PRODUCT DETAIL MODAL
+    // ----------------------------------------------------
+    function openProductModal(productId) {
+      const p = products.find(i => i.id === productId);
+      if (!p) return;
+
+      const modalContent = document.getElementById('productModalContent');
+      modalContent.innerHTML = `
+        <div class="space-y-3">
+          <div class="py-6 bg-gradient-to-br ${p.accentColor} rounded-2xl flex items-center justify-center border border-slate-700">
+            <i class="fa-solid ${p.icon} text-6xl"></i>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">
+              ${p.category} Gadget
+            </span>
+            <span class="text-xs text-amber-400 font-bold"><i class="fa-solid fa-star mr-1"></i>${p.rating} (${p.reviewsCount} reviews)</span>
+          </div>
+
+          <h2 class="text-base font-extrabold text-white leading-snug">${p.name}</h2>
+          
+          <div class="flex items-baseline gap-2">
+            <span class="text-xl font-black text-white">₹${p.price.toLocaleString('en-IN')}</span>
+            <span class="text-xs text-slate-500 line-through">₹${p.originalPrice.toLocaleString('en-IN')}</span>
+            <span class="text-xs text-emerald-400 font-bold">1 Year Warranty</span>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">${p.description}</p>
+
+          <div class="bg-slate-800/70 p-3 rounded-xl border border-slate-700 space-y-1.5">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Key Specifications</h4>
+            <ul class="space-y-1">
+              ${p.specs.map(s => `<li class="text-[11px] text-slate-300 flex items-start gap-1.5"><i class="fa-solid fa-check text-cyan-400 text-xs mt-0.5"></i> ${s}</li>`).join('')}
+            </ul>
+          </div>
+
+          <!-- Demo Placeholder -->
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center gap-3">
+            <div class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-cyan-400">
+              <i class="fa-solid fa-circle-play text-xl"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-white">Quick Demo Video</p>
+              <p class="text-[10px] text-slate-400">See gadget in action (30 Seconds)</p>
+            </div>
+          </div>
+
+          <button onclick="addToCart('${p.id}'); closeProductModal();" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold py-3 rounded-xl text-xs uppercase tracking-wide active:scale-95 transition shadow-lg shadow-cyan-500/20">
+            Add to Shopping Cart
+          </button>
+        </div>
+      `;
+
+      document.getElementById('productDetailModal').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productDetailModal').classList.add('hidden');
+    }
+
+    // ----------------------------------------------------
+    // COMPARISON TOOL
+    // ----------------------------------------------------
+    function toggleCompareItem(productId) {
+      if (compareList.includes(productId)) {
+        compareList = compareList.filter(id => id !== productId);
+        showToast('Removed from compare');
+      } else {
+        if (compareList.length >= 2) {
+          showToast('You can compare max 2 items at a time!');
+          return;
+        }
+        compareList.push(productId);
+        showToast('Added to comparison list!');
+      }
+      updateCompareUI();
+      renderProducts();
+    }
+
+    function updateCompareUI() {
+      document.getElementById('compareCount').textContent = compareList.length;
+      const navBadge = document.getElementById('navCompareBadge');
+      navBadge.textContent = compareList.length;
+      if (compareList.length > 0) navBadge.classList.remove('hidden');
+      else navBadge.classList.add('hidden');
+    }
+
+    function toggleCompareModal(show) {
+      const modal = document.getElementById('compareModal');
+      if (!show) {
+        modal.classList.add('hidden');
+        return;
+      }
+
+      const body = document.getElementById('compareModalBody');
+      if (compareList.length < 2) {
+        body.innerHTML = `
+          <div class="py-12 text-center text-slate-500 space-y-2">
+            <i class="fa-solid fa-code-compare text-4xl text-slate-700"></i>
+            <p class="text-xs">Select at least 2 gadgets to compare specs side-by-side!</p>
+          </div>
+        `;
+      } else {
+        const item1 = products.find(p => p.id === compareList[0]);
+        const item2 = products.find(p => p.id === compareList[1]);
+
+        body.innerHTML = `
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <!-- Item 1 Header -->
+            <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 text-center">
+              <i class="fa-solid ${item1.icon} text-3xl text-cyan-400 mb-1"></i>
+              <h4 class="font-bold text-white text-xs truncate">${item1.name}</h4>
+              <p class="text-cyan-400 font-bold mt-1">₹${item1.price.toLocaleString('en-IN')}</p>
+            </div>
+            
+            <!-- Item 2 Header -->
+            <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 text-center">
+              <i class="fa-solid ${item2.icon} text-3xl text-orange-400 mb-1"></i>
+              <h4 class="font-bold text-white text-xs truncate">${item2.name}</h4>
+              <p class="text-orange-400 font-bold mt-1">₹${item2.price.toLocaleString('en-IN')}</p>
+            </div>
+
+            <!-- Spec Row 1: Category -->
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-slate-300">
+              <span class="text-[10px] text-slate-500 block">Category:</span>
+              <span class="font-medium">${item1.category}</span>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-slate-300">
+              <span class="text-[10px] text-slate-500 block">Category:</span>
+              <span class="font-medium">${item2.category}</span>
+            </div>
+
+            <!-- Spec Row 2: Tech Highlight -->
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-slate-300">
+              <span class="text-[10px] text-slate-500 block">Tech Highlight:</span>
+              <span class="font-medium text-cyan-400">${item1.techSpecPill}</span>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-slate-300">
+              <span class="text-[10px] text-slate-500 block">Tech Highlight:</span>
+              <span class="font-medium text-orange-400">${item2.techSpecPill}</span>
+            </div>
+
+            <!-- Spec Row 3: Rating -->
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-amber-400 font-bold">
+              <span class="text-[10px] text-slate-500 block">Rating:</span>
+              ★ ${item1.rating}
+            </div>
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-amber-400 font-bold">
+              <span class="text-[10px] text-slate-500 block">Rating:</span>
+              ★ ${item2.rating}
+            </div>
+
+            <!-- Spec Row 4: Warranty -->
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-slate-300">
+              <span class="text-[10px] text-slate-500 block">Warranty:</span>
+              ${item1.warranty}
+            </div>
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-slate-300">
+              <span class="text-[10px] text-slate-500 block">Warranty:</span>
+              ${item2.warranty}
+            </div>
+          </div>
+        `;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    // ----------------------------------------------------
+    // CHECKOUT & ORDERS
+    // ----------------------------------------------------
+    function openCheckout() {
+      toggleCartDrawer(false);
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    function placeOrder() {
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const addr = document.getElementById('custAddr').value.trim();
+
+      if (!name || !phone || !addr) {
+        showToast('Please fill all delivery details!');
+        return;
+      }
+
+      const orderId = '#WG-' + Math.floor(10000 + Math.random() * 90000);
+      const newOrder = {
+        id: orderId,
+        date: new Date().toLocaleDateString(),
+        items: [...cart],
+        status: 'Processing'
+      };
+
+      placedOrders.push(newOrder);
+
+      // Reset state
+      cart = [];
+      promoApplied = false;
+      updateCartUI();
+
+      closeCheckout();
+      document.getElementById('successOrderId').textContent = orderId;
+      document.getElementById('successModal').classList.remove('hidden');
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').classList.add('hidden');
+    }
+
+    function showOrdersModal() {
+      const list = document.getElementById('ordersList');
+      if (placedOrders.length === 0) {
+        list.innerHTML = `
+          <div class="py-12 text-center text-slate-500">
+            <i class="fa-solid fa-box-open text-3xl mb-2 text-slate-600"></i>
+            <p class="text-xs">No recent orders found!</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = placedOrders.map(o => `
+          <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-mono font-bold text-cyan-400">${o.id}</span>
+              <span class="text-slate-400 text-[10px]">${o.date}</span>
+            </div>
+            <div class="text-xs text-slate-300">
+              ${o.items.map(i => `${i.name} (x${i.qty})`).join(', ')}
+            </div>
+            <div class="flex justify-between items-center text-[10px] pt-1 border-t border-slate-700">
+              <span class="text-emerald-400 font-bold"><i class="fa-solid fa-truck"></i> ${o.status}</span>
+              <span class="text-slate-400">Wings Fast Delivery</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('ordersModal').classList.remove('hidden');
+    }
+
+    function closeOrdersModal() {
+      document.getElementById('ordersModal').classList.add('hidden');
+    }
+
+    // UTILS
+    function scrollToProducts() {
+      document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
